@@ -47,3 +47,15 @@ vercel.json deploys public/ and api/. For protected Claude generation, configure
 The voxel engine, multiplayer, action language, and governance simulation predate this adaptation. See ATTRIBUTION.md. This submission adds the Chutes adapter, provenance, demo mode, deployment isolation, tests, branding, and presentation. It does not claim the entire engine was built during the event.
 
 Keep credentials in ignored .env files or hosting secrets, never in slides, commits, or client JavaScript.
+
+## Builders House track alignment
+
+Primary: **Track 3 — Build with Bittensor Subnets ($200 USDC)**. Also considered for **Best Overall ($250 USDC)** and **Community Choice ($150 USDC)**, subject to organizer rules.
+
+- Product experience: prompt-to-build, editable voxel structures, browser gameplay.
+- Execution: actual engine playback, provider checks, hosted prototype.
+- Subnet use: implemented Chutes SN64 adapter; successful funded live inference remains pending.
+- Continued development: activate Chutes, measure cost/quality, test a paid creator pilot.
+- Attribution: base engine predates this adaptation. No claim to having built all functionality during the five-day program.
+
+The three-minute demo replays actual centrally generated AI plans in the voxel engine using a controlled camera; it is not a recording of successful live Chutes inference.

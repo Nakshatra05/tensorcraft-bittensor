@@ -1,1 +1,2 @@
 Install both TTF files in fonts before opening the editable PowerPoint to preserve the Minecraft pixel typography. Right-click each font and choose Install, then reopen PowerPoint.
+Slide 3 contains the embedded three-minute narrated demo. Use PowerPoint Slide Show and click the video to play. The standalone MP4 is at public/demo/TensorCraft-3-Minute-Demo.mp4 and on the live site under /demo/. Some web viewers do not play embedded media.
