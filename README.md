@@ -10,7 +10,7 @@ A Minecraft-inspired sandbox powered by Bittensor. Describe your idea, generate 
 
 [Play Now](https://tensorcraft-bittensor.vercel.app/) ·  [Pitch Deck](presentation/TensorCraft-Bittensor-Pitch.pptx)
 
-Built for **Bittensor Builders House** · **Track 3 — Build with Bittensor Subnets**
+Built for **Bittensor Builders House** ·
 
 ![TensorCraft Minecraft-inspired visual theme](public/img/minecraft-menu.png)
 
