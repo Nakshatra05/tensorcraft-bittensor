@@ -5406,17 +5406,28 @@ function newWorld() {
   setTimeout(() => chatLine(`👋 Welcome! New here? <b>Esc → How to Play</b> (or <b>${esc(keyName(KB.howto))}</b>). <b>${esc(keyName(KB.create))}</b> asks <b>@Creator</b> to make anything, and <b>Ada</b>, an AI architect, lives nearby: <b>@Ada build me a lighthouse</b>.`, 'sys'), 800);
 }
 let welcome = null;
+let hostedSinglePlayer = false;
+if (!SANDBOX) {
+  try {
+    const response = await fetch(API_BASE + '/api/status', { signal: AbortSignal.timeout(5000) });
+    if (response.ok) { ai.status = await response.json(); hostedSinglePlayer = ai.status.deployment === 'single-player'; }
+  } catch {}
+}
 if (SANDBOX) { noSave = true; ai.password = ''; $('#menu').style.display = 'none'; SB.snap = await new Promise((r) => (window.__sbLoad = r)); startSandbox(SB.snap); }
-else for (let i = 0; i < 5 && !welcome; i++) { // a server restart takes a few seconds: keep trying before giving up on the shared world
+else if (!hostedSinglePlayer) for (let i = 0; i < 5 && !welcome; i++) { // a server restart takes a few seconds: keep trying before giving up on the shared world
   if (i) { $('#netmsg').textContent = `Connecting to the shared world… (try ${i + 1})`; await sleep(2500); }
   welcome = await connect();
 }
 if (welcome) startOnline(welcome);
 else if (!SANDBOX) {
   if (!load()) newWorld();
-  $('#netmsg').textContent = 'TensorCraft · OFFLINE: your own world in this browser';
-  setTimeout(() => sysMsg("⚠ Couldn't reach the shared world, so this is your offline world (saved in this browser). It switches back by itself as soon as the server answers.", 'err'), 900);
-  reloadWhenServerUp();
+  $('#netmsg').textContent = hostedSinglePlayer ? 'TensorCraft · single-player demo · saved in this browser' : 'TensorCraft · OFFLINE: your own world in this browser';
+  if (hostedSinglePlayer) {
+    setTimeout(() => sysMsg('Welcome to TensorCraft. Press G for demo builds: tower, bridge, cabin or garden. Live Chutes inference needs funded credits.'), 900);
+  } else {
+    setTimeout(() => sysMsg("⚠ Couldn't reach the shared world, so this is your offline world (saved in this browser). It switches back by itself as soon as the server answers.", 'err'), 900);
+    reloadWhenServerUp();
+  }
 }
 renderHotbar(); updateBudgetUI(); updateNetUI(); refreshStatus(); setInterval(refreshStatus, 30000);
 if (ai.password) api('/api/check').then((r) => { if (r.status === 401) { ai.password = ''; localStorage.removeItem('pc.pw'); } updateBudgetUI(); }); // remembered password still valid?
