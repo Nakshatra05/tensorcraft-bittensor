@@ -8,7 +8,7 @@ Describe a tower, walk inside it, and build a world with AI agents. TensorCraft 
 
 WASD moves, Space jumps, mouse mines/places, G requests a build, Esc opens the menu. Try tower, bridge, cabin, or garden. `/gamemode creative` enables flying (F).
 
-The Vercel deployment runs a single-player browser world with deterministic demo blueprints. Demo responses are labeled and consume no credits. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds require the Node/Docker server.
+The Vercel deployment runs a single-player browser world with password-protected Claude Sonnet 5.5 generation. A local smoke test successfully generated a tower plan. Deterministic demo blueprints remain available when HOSTED_LIVE_AI is disabled. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds require the Node/Docker server.
 
 ## Bittensor integration
 
@@ -40,7 +40,7 @@ The full server persists usage and enforces a spending budget and concurrency li
 
 ## Vercel
 
-vercel.json deploys public/ and api/. The public demo requires no credentials. For protected live generation, configure CHUTES_API_KEY, GAME_PASSWORD, and HOSTED_LIVE_AI=1 in hosting secrets, then redeploy. The serverless route has no durable spending ledger: use provider-side quotas. Never publish the password. Use the Node server for persistent multiplayer and budget enforcement.
+vercel.json deploys public/ and api/. For protected Claude generation, configure ANTHROPIC_API_KEY, PROVIDER=anthropic, CLAUDE_MODEL, GAME_PASSWORD, and HOSTED_LIVE_AI=1 in hosting secrets. For Chutes, set PROVIDER=chutes and CHUTES_API_KEY, then redeploy. The serverless route has no durable spending ledger: use provider-side quotas. Never publish the password. Use the Node server for persistent multiplayer and budget enforcement.
 
 ## Submission and provenance
 

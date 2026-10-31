@@ -2732,7 +2732,7 @@ async function api(path, body) {
     if (j.inference) {
       ai.lastInference = j.inference;
       const receipt = j.inference;
-      $('#inference-status').textContent = receipt.verifiedResponse ? `Last build: Chutes / SN64 · ${receipt.model} · ${receipt.latencyMs} ms` : 'Last build: local demo blueprint';
+      $('#inference-status').textContent = receipt.verifiedResponse ? `Last build: ${receipt.provider === 'chutes' ? 'Chutes / SN64' : 'Claude / Anthropic'} · ${receipt.model} · ${receipt.latencyMs} ms` : 'Last build: local demo blueprint';
     }
     return { ok: r.ok, status: r.status, j };
   } catch (err) { return { ok: false, status: 0, j: { error: 'Cannot reach the server (' + err.message + ')' } }; }
@@ -2745,6 +2745,7 @@ function updateBudgetUI() {
   if (s?.demo && !ai.password) ai.password = 'demo';
   if (!ai.password) { el.textContent = '🔒 AI locked — Esc → password'; el.style.color = '#ffd27a'; }
   else if (s?.demo) { el.textContent = 'Demo builder · G: tower / bridge / cabin / garden'; el.style.color = '#a3f9c5'; }
+  else if (s?.metered) { el.textContent = `${s.provider === 'anthropic' ? 'Claude' : 'Chutes / SN64'} · live AI · G to build`; el.style.color = '#a3f9c5'; }
   else if (s) { const out = s.spentUsd >= s.budgetUsd - 0.01; el.textContent = `✨ AI $${(+s.spentUsd).toFixed(2)} / $${s.budgetUsd}${s.mock ? ' (mock)' : ''} · agents ${agentsOn ? 'on' : 'off'} (K)`; el.style.color = out ? '#ff8a8a' : '#c8ffd0'; }
   $('#agentsState').textContent = `AI minds (Ada…) ${agentsOn ? 'answer when tagged' : 'are switched off'}`;
   if (!ai.changingPw) { $('#pwfld').hidden = !!ai.password; $('#pwok').hidden = !ai.password; } // the password is asked once, then remembered
@@ -5429,7 +5430,7 @@ else if (!SANDBOX) {
   if (!load()) newWorld();
   $('#netmsg').textContent = hostedSinglePlayer ? 'TensorCraft · single-player demo · saved in this browser' : 'TensorCraft · OFFLINE: your own world in this browser';
   if (hostedSinglePlayer) {
-    setTimeout(() => sysMsg('Welcome to TensorCraft. Press G for demo builds: tower, bridge, cabin or garden. Live Chutes inference needs funded credits.'), 900);
+    setTimeout(() => sysMsg(ai.status?.demo ? 'Welcome to TensorCraft. Press G for demo builds: tower, bridge, cabin or garden. Live Chutes inference needs funded credits.' : `Welcome to TensorCraft. Enter the host password in the menu to use ${ai.status?.provider === 'anthropic' ? 'Claude' : 'Chutes'} for live builds.`), 900);
   } else {
     setTimeout(() => sysMsg("⚠ Couldn't reach the shared world, so this is your offline world (saved in this browser). It switches back by itself as soon as the server answers.", 'err'), 900);
     reloadWhenServerUp();
