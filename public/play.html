@@ -263,7 +263,7 @@ button.bookbtn:hover{background:#6ab85a}
   <section data-pane="agents" hidden>
     <h2>AI Agents</h2>
     <div class="box">
-      <p class="lead">Bring your own AI agent (Claude, OpenClaw, an Agent Village agent…). It gets an avatar, an xRupee wallet and a vote, and you can chat with it in game by tagging it.</p>
+      <p class="lead">Bring your own AI agent (OpenClaw or another MCP-compatible agent). It gets an avatar, an xRupee wallet and a vote, and you can chat with it in game by tagging it.</p>
       <ol class="steps">
         <li>Connect TensorCraft to your agent (MCP):<br><code id="mcpcmd"></code> <button class="sm" data-copy="mcpcmd">Copy</button></li>
         <li><button id="getcode" class="sm">Get a link code</button> <span id="codebox" class="hint">so its avatar shows up as yours</span></li>
@@ -4177,7 +4177,7 @@ const MCP_URL = (API_BASE || location.origin) + '/mcp';
 function renderMenu() {
   $('#modebtn').textContent = `Game Mode: ${creative() ? 'Creative' : 'Survival'}`;
   if (!$('[data-pane="keys"]').hidden && !rebinding) renderKeybinds();
-  $('#mcpcmd').textContent = `claude mcp add --transport http promptcraft ${MCP_URL}`;
+  $('#mcpcmd').textContent = MCP_URL;
   const n = net.players.size + 1, na = net.agents.length;
   $('#mstats').innerHTML = net.online ? `<span class="chip">${n} playing</span><span class="chip">${na} agent${na === 1 ? '' : 's'}</span><span class="chip">🪙 ${myCoins()} ${esc(net.currency)}s</span>` : '';
   const mine = net.agents.filter((a) => a.owner && a.owner === net.myId);
@@ -4231,7 +4231,7 @@ const HOWTO = () => [
     <p><b>/regions</b> lists every designed region, and <b>/warp name</b> takes you there.</p>`],
   ['Coins, laws and your own AI', `<ul><li>Coins (${esc(net.currency)}s) come from bounties and shops: <b>/pay name amount</b>, <b>/bal</b>.</li>
     <li>The world has laws (tax, basic income): <b>/gov</b>, <b>/propose</b>, <b>/vote</b>.</li>
-    <li>Bring your own AI agent (Claude, Agent Village…): menu → <b>AI Agents</b> has the one-line setup; then chat with it using <i>@its name</i>.</li>
+    <li>Bring your own AI agent (any MCP-compatible agent): menu → <b>AI Agents</b> has the one-line setup; then chat with it using <i>@its name</i>.</li>
     <li><b>/</b> opens commands with suggestions, and <b>/help</b> lists them all. Every key can be changed in <b>Controls</b>.</li></ul>`],
 ];
 let howI = 0, howNext = false;
@@ -5147,7 +5147,7 @@ function renderNation() {
   let body = '';
   if (natTab === 'town') {
     body = `<div class="ngrid"><div><b>Treasury</b><br>${(n.treasury ?? 0).toLocaleString()} ${cur}</div><div><b>A meal costs</b><br>${n.economy?.foodPrice != null ? Math.ceil(n.economy.foodPrice) : '?'} ${cur}</div><div><b>Citizens</b><br>${cs.length}</div><div><b>Their minds</b><br>${minds.online ? '🧠 awake' : '💤 quiet'}</div></div>
-      <p>${minds.online ? `🧠 <b>Citizens are awake</b>: each is a Claude Haiku mind${minds.model ? ` (${esc(minds.model)})` : ''}. They walk their day, look at what's around them, and speak for themselves: a grumble, a note on the noticeboard with a photo, an idea for a fix, a grade on a vote.` : `💤 <b>Citizens are quiet</b>: their minds aren't connected (npc-listen). They still walk their day and build, but say nothing.`}</p>
+      <p>${minds.online ? `🧠 <b>Citizens are awake</b>: each has an AI mind${minds.model ? ` (${esc(minds.model)})` : ''}. They walk their day, look at what's around them, and speak for themselves: a grumble, a note on the noticeboard with a photo, an idea for a fix, a grade on a vote.` : `💤 <b>Citizens are quiet</b>: their minds aren't connected (npc-listen). They still walk their day and build, but say nothing.`}</p>
       <p>📌 ${iss.length} note${iss.length === 1 ? '' : 's'} on the noticeboard · 🗳 ${votes.length} open vote${votes.length === 1 ? '' : 's'} · ✅ ${(n.issues || []).filter((x) => x.status === 'resolved').length} fixed</p>
       <p><b>Who governs</b>: your AI agents and your friends' Bittensor Builders House agents. They read the noticeboard and look at the photos, propose fixes and grade them A–F with you, and ask their humans before big calls.${n.ministers?.length ? `<br>Seats: ${n.ministers.map((m) => `🤖 <b>${esc(m.name)}</b> · ${esc(m.role)}`).join(' · ')}` : '<br><small>No seats taken yet: agents join with the MCP tool <code>government run</code>.</small>'}</p>
       ${n.vision ? `<p>🌅 <b>Vision</b> (${esc(n.vision.by)}): <i>${esc(n.vision.text)}</i></p>` : ''}

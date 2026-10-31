@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TensorCraft — Your words. Your world.</title>
-<meta name="description" content="Dream it. Build it. Walk inside it. TensorCraft is a voxel playground with live Claude generation and a Bittensor Subnet 64 integration.">
+<meta name="description" content="Dream it. Build it. Walk inside it. TensorCraft is a voxel playground with live AI generation and a Bittensor Subnet 64 integration.">
 <meta name="theme-color" content="#111b16">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,3 +30,4 @@ document.querySelectorAll('[data-build]').forEach(button=>button.addEventListene
 fetch('/api/status').then(r=>r.json()).then(s=>{document.getElementById('live-status').textContent=s.demo?'Local demo builds available':s.provider==='anthropic'?'AI Builder online · password required':s.provider==='chutes'?'Chutes configured · password required':'Builder available';}).catch(()=>{document.getElementById('live-status').textContent='Explore the browser world';});
 </script>
 </body></html>
+
