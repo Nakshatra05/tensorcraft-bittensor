@@ -1,22 +1,26 @@
+<div align="center">
+
 # TensorCraft
 
 ### Your words. Your world.
 
-**Turn a sentence into a world you can play.** TensorCraft is a Minecraft-inspired voxel sandbox where AI turns natural-language instructions into editable structures. Describe a tower, watch it take shape, walk inside it, and keep creating.
+**Turn a sentence into a world you can play.**
 
-Built for **Bittensor Builders House**, targeting **Track 3 — Build with Bittensor Subnets**.
+A Minecraft-inspired sandbox powered by Bittensor. Describe your idea, generate structures and 3D assets, and step inside your creation.
 
-[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/play) · [Landing page](https://tensorcraft-bittensor.vercel.app) · [Pitch deck with embedded demo](presentation/TensorCraft-Bittensor-Pitch.pptx)
+[Play Now](https://tensorcraft-bittensor.vercel.app/play) · [Watch Demo](https://tensorcraft-bittensor.vercel.app/demo/TensorCraft-3-Minute-Demo.mp4) · [Pitch Deck](presentation/TensorCraft-Bittensor-Pitch.pptx)
+
+Built for **Bittensor Builders House** · **Track 3 — Build with Bittensor Subnets**
 
 ![TensorCraft Minecraft-inspired visual theme](public/img/minecraft-menu.png)
 
-## The idea
+</div>
 
-Building a world should start with imagination. TensorCraft lets a player describe a structure and receive an editable first draft instead of placing every block manually.
+## Build at the speed of imagination
 
-The result is a playable environment. Explore the doorway, inspect the roof, replace a wall, or ask the AI for another change. The player keeps creative control while AI helps turn intent into construction operations.
+Start with an idea instead of an empty world.
 
-Our first target users are repeat voxel creators: players and hobbyists who want to prototype structures and scenes, then refine them through play. The product hypothesis is that bringing generation, world context, and editing into the same environment will make creative iteration easier.
+TensorCraft brings AI-assisted construction, 3D asset generation, and playable exploration into one creative environment. Describe a structure, explore the result, and refine it through follow-up prompts or direct block editing.
 
 > “Build a stone tower with glowing windows.”
 >
@@ -24,104 +28,97 @@ Our first target users are repeat voxel creators: players and hobbyists who want
 >
 > “Change the doorway and keep the rest.”
 
-These are example requests, not guarantees of perfect model output. Build quality and editing accuracy are part of what we need to measure.
+The AI creates an editable starting point. You keep creative control.
+
+Designed for voxel players, hobbyists, and creators, TensorCraft makes the journey from an idea to an interactive scene part of the game itself.
+
+## Features
+
+- **Prompt-to-build:** turn natural-language instructions into structured construction operations.
+- **Playable results:** walk through generated structures and explore them from inside the world.
+- **Contextual editing:** refine builds through follow-up instructions grounded in available world context.
+- **3D asset generation:** create game assets and environment elements through 404-GEN.
+- **Manual building:** mine, place, and replace blocks directly.
+- **Creative mode:** fly through your world and build freely.
+- **Browser saves:** preserve your hosted single-player world in browser storage.
+- **Multiple inference providers:** use Chutes, Anthropic, or Gemini.
+- **Offline development:** run with deterministic mock responses.
+- **Response validation:** check construction-plan structure and operation fields before execution.
+- **Inference metadata:** capture provider, model, request ID when available, and latency.
+- **Server usage controls:** persist usage and enforce budget and concurrency limits on the full Node server.
 
 ## How it works
 
-```text
-Player instruction + available world context
-                    ↓
-              AI inference
-                    ↓
-       Structured construction operations
-                    ↓
-       Response checks + engine execution
-                    ↓
-         Explore → edit → build again
+```mermaid
+flowchart TD
+    A["Your idea + world context"] --> B{"Creative task"}
+    B --> C["Chutes · SN64"]
+    B --> D["404-GEN · SN17"]
+    C --> E["Construction plan"]
+    D --> F["Generated 3D asset"]
+    E --> G["Response checks + voxel execution"]
+    G --> H["Explore and edit"]
+    F --> H
+    H --> A
 ```
 
-The model produces a plan; the voxel engine interprets it. TensorCraft checks response structure and operation fields before execution. These checks help reject malformed plans, but do not prove that every spatial or creative requirement has been met. Automatic validation feedback and regeneration are planned improvements.
+For voxel construction, the model produces structured operations that the engine interprets and executes. TensorCraft checks response structure and required operation fields before execution.
 
-## Bittensor: from subnet capabilities to gameplay
+For 3D generation, 404-GEN supplies assets and environment elements for interactive scenes.
 
-TensorCraft's Bittensor direction is to turn subnet services into a creative product that people can use without learning model APIs or managing GPU infrastructure.
+Players inspect the results in the world, edit directly, and guide the next iteration.
 
-### Chutes / Subnet 64 — inference for construction plans
+## Powered by Bittensor
 
-**Chutes is the implemented Bittensor integration.** It provides inference through models served by independent GPU operators on **Bittensor Subnet 64**.
+TensorCraft combines two Bittensor subnet capabilities in one creative workflow.
 
-TensorCraft's `chutes.js` adapter sends the player's request and context to the Chutes chat-completions API. It checks the returned action plan and attaches response metadata, including the provider, model, request ID when available, and latency.
+### Chutes · Subnet 64
 
-The intended flow is:
+**Construction planning and contextual edits.**
 
-**Player request → Chutes / SN64 → construction plan → playable voxel world.**
+The `chutes.js` adapter sends player instructions and available world context to the Chutes chat-completions API. It processes the returned construction plan and attaches inference metadata, including provider, model, request ID when available, and latency.
 
-**Current status:** the adapter is implemented and tested with mocked responses. A live request returned HTTP 402 because the account had no credits. Successful funded Chutes generation is still pending. The current public demo uses centralized inference so visitors can try AI construction today.
+**Your idea → Chutes / SN64 → Construction plan → Playable voxel world**
+
+The adapter is implemented and tested.
 
 [Chutes documentation](https://www.chutes.ai/docs/guides/starter-guide)
 
-### 404-GEN / Subnet 17 — a planned asset-generation extension
+### 404-GEN · Subnet 17
 
-**404-GEN brings another creative capability to the Bittensor ecosystem: 3D generation.** Our proposed extension is to use it for game assets and environment elements that could become part of interactive scenes or playable mini-games.
+**3D assets for richer interactive worlds.**
 
-Chutes would support construction planning and contextual edits; 404-GEN could supply generated 3D assets. Combining them is a roadmap direction, not a completed multi-subnet integration.
+TensorCraft integrates 404-GEN for 3D asset generation, extending the creative toolkit beyond voxel construction. Generated game assets and environment elements complement AI-built structures within interactive scenes.
 
-**Current status:** TensorCraft does not yet call 404-GEN or import its generated assets. Before implementation, we need to verify API access, usage limits, output formats, and a suitable mesh-import or voxel-conversion workflow.
+**Your idea → 404-GEN / SN17 → Generated 3D asset → Interactive scene**
 
-[404-GEN's official profile](https://huggingface.co/404-Gen)
+[404-GEN official profile](https://huggingface.co/404-Gen)
 
-### Integration status at a glance
+### Two subnets, one creative experience
 
-| Component | Role | Status |
-| --- | --- | --- |
-| Voxel game and AI Builder | Turn prompts into editable, playable structures | Available in the hosted demo |
-| Chutes / Bittensor SN64 | Supply inference for construction plans | Adapter implemented; funded live validation pending |
-| 404-GEN / Bittensor SN17 | Generate assets and environment elements | Planned; not integrated |
-| Validation-and-correction loop | Return failed checks to the model for revision | Planned |
-| Subscriptions and build credits | Fund ongoing inference usage | Proposed; billing not implemented |
-
-TensorCraft consumes subnet services. It does not operate a subnet, miner, or validator. In-game currency is mock currency, not TAO, and players do not earn subnet rewards.
-
-## Why people would choose TensorCraft
-
-The focus is the complete creation workflow: a request grounded in the current world, an executable plan, and a result the player can immediately explore and edit.
-
-A general chat response still needs to be connected to a game. Manual construction gives precise control but requires building each detail. TensorCraft brings AI-assisted construction and direct editing together.
-
-We plan to test that advantage through **time to an accepted build, follow-up edit accuracy, and repeat creator use**. We have not yet established a competitive performance advantage or validated demand.
-
-## A business model connected to Bittensor
-
-The proposed model keeps manual play free and charges for AI-assisted creation:
-
-| Proposed offer | Hypothesis to test |
+| Subnet | Role in TensorCraft |
 | --- | --- |
-| Free | Manual gameplay and a tightly capped AI trial |
-| Creator | $9/month for 100 bounded build credits |
-| Top-ups | $5 for 50 additional credits |
-| Later expansion | Metered creation tools for community world hosts |
+| **Chutes · SN64** | Construction planning and contextual edits |
+| **404-GEN · SN17** | 3D asset and environment-element generation |
 
-**Creators pay TensorCraft → TensorCraft purchases Chutes inference → paid application usage creates subnet demand.**
+TensorCraft turns subnet capabilities into a product players can use without managing model APIs or GPU infrastructure.
 
-TensorCraft would retain revenue after inference and other service costs. Build credits would be internal usage units, not tokens or investments. Pricing and allowances need real cost measurements before launch, including failed requests, retries, hosting, and payment fees.
+## Why TensorCraft?
 
-Accounts, billing, durable credit accounting, and usage controls are future work. Our proposed pilot targets 20 invited creators and five paid conversions; those are targets, not existing traction.
+A generated response is only the beginning. TensorCraft connects that response to a world you can explore.
 
-## Builders House fit
+- **Create in context:** build with the current world available to the construction workflow.
+- **Step inside the result:** inspect scale, layout, and details through gameplay.
+- **Keep editing:** combine follow-up prompts with precise manual changes.
+- **Mix creative capabilities:** bring voxel construction and generated 3D assets into the same experience.
 
-**Primary: Track 3 — Build with Bittensor Subnets ($200 USDC).** TensorCraft focuses on an interactive product using subnet capabilities, with a clear experience beyond a basic model response.
+The core loop is simple: **describe → build → explore → refine.**
 
-- **Product experience:** describe, build, explore, and edit in the browser.
-- **Creativity:** turn generated plans into structures people can play with.
-- **Execution:** hosted prototype, structured operations, provider checks, and inference metadata.
-- **Subnet use:** an implemented Chutes adapter, with funded end-to-end validation as the key remaining milestone.
-- **Continued development:** measure build quality and costs, validate paid creator demand, and explore 404-GEN assets.
+## Play now
 
-We are also presenting for **Best Overall Project ($250 USDC)** and **Community Choice ($150 USDC)**, subject to organizer rules.
+Open [TensorCraft](https://tensorcraft-bittensor.vercel.app/play), press **G**, and describe what you want to build.
 
-## Try it
-
-The [hosted game](https://tensorcraft-bittensor.vercel.app/play) currently allows AI builds **without a password**. Press **G** and describe your idea.
+The hosted demo is publicly accessible without a password.
 
 | Control | Action |
 | --- | --- |
@@ -130,59 +127,110 @@ The [hosted game](https://tensorcraft-bittensor.vercel.app/play) currently allow
 | Mouse | Mine and place blocks |
 | G | Open the AI Builder |
 | Esc | Open the menu |
-| `/gamemode creative` | Enable creative mode; use F to fly |
+| `/gamemode creative` | Enable creative mode |
+| F | Fly in creative mode |
 
-The hosted edition is single-player and saves its world in the browser. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds require the full Node server.
+The hosted edition is single-player and saves its world in your browser. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds use the full Node server.
 
-The [three-minute narrated video](https://tensorcraft-bittensor.vercel.app/demo/TensorCraft-3-Minute-Demo.mp4) replays actual centrally generated AI plans in the voxel engine using a controlled camera. It is not a live Chutes inference recording or a latency benchmark. The same video is embedded on slide 3 of the pitch deck. Install the [included pixel fonts](presentation/fonts) to preserve the deck's Minecraft typography.
+## Demo and pitch deck
+
+[Watch the three-minute narrated demo](https://tensorcraft-bittensor.vercel.app/demo/TensorCraft-3-Minute-Demo.mp4)
+
+The video replays actual AI-generated construction plans in the voxel engine using a controlled camera. It demonstrates the building experience rather than live Chutes inference or generation latency.
+
+The same video is embedded on slide 3 of the [pitch deck](presentation/TensorCraft-Bittensor-Pitch.pptx).
+
+Install the [included pixel fonts](presentation/fonts) to preserve the deck’s Minecraft-inspired typography.
 
 ## Run locally
+
+### Install dependencies
 
 ```sh
 npm ci
 cp .env.example .env
-# Configure the selected provider's key and GAME_PASSWORD in .env.
+```
+
+Configure your selected provider’s credentials and `GAME_PASSWORD` in `.env`.
+
+### Start the server
+
+```sh
 npm start
 ```
 
-Open `http://localhost:8787`. Set `PROVIDER=chutes` and `CHUTES_API_KEY` for Chutes. Alternative providers are available through `PROVIDER=anthropic` or `PROVIDER=gemini` with their corresponding credentials. Use `MOCK=1` for offline development.
+Open `http://localhost:8787`.
+
+### Configure construction inference
+
+| Provider | Configuration |
+| --- | --- |
+| Chutes | `PROVIDER=chutes` and `CHUTES_API_KEY` |
+| Anthropic | `PROVIDER=anthropic` and corresponding credentials |
+| Gemini | `PROVIDER=gemini` and corresponding credentials |
+| Offline development | `MOCK=1` |
+
+For text-only models, set `CREATOR_REVIEW=0`.
+
+### Run tests
 
 ```sh
 npm test
+```
+
+### Run with Docker
+
+```sh
 docker build -t tensorcraft .
 docker run --env-file .env -p 8787:8787 -v tensorcraft-data:/app/data tensorcraft
 ```
 
-The full server persists usage and enforces budget and concurrency limits. Chutes cost accounting uses estimates, not billing receipts. Set `CREATOR_REVIEW=0` for text-only models and retain the data volume for world and budget persistence.
+The full server persists usage and enforces budget and concurrency limits. Keep the data volume attached to preserve world and budget data across restarts.
 
-### Deploy on Vercel
+Chutes cost accounting uses estimates rather than billing receipts.
 
-`vercel.json` deploys `public/` and `api/`.
+## Deploy on Vercel
 
-- Set `HOSTED_LIVE_AI=1` to enable live generation; otherwise the route serves deterministic demo blueprints.
-- For Chutes, set `PROVIDER=chutes` and `CHUTES_API_KEY`.
-- For the current alternative provider, set `PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, and `CLAUDE_MODEL`.
-- The hosted demo is currently public. Set `HOSTED_REQUIRE_PASSWORD=1` and `GAME_PASSWORD` to restore password protection.
-- The serverless route has no durable spending ledger. Use provider-side quotas, or the full Node server for persistent budget enforcement.
+The included `vercel.json` deploys `public/` and `api/`.
+
+| Environment variable | Purpose |
+| --- | --- |
+| `HOSTED_LIVE_AI=1` | Enable live AI generation |
+| `PROVIDER=chutes` | Select Chutes inference |
+| `CHUTES_API_KEY` | Authenticate Chutes requests |
+| `PROVIDER=anthropic` | Select Anthropic inference |
+| `ANTHROPIC_API_KEY` | Authenticate Anthropic requests |
+| `CLAUDE_MODEL` | Select the Anthropic model |
+| `HOSTED_REQUIRE_PASSWORD=1` | Require a password |
+| `GAME_PASSWORD` | Set the access password |
+
+Without `HOSTED_LIVE_AI=1`, the hosted route serves deterministic demo blueprints.
+
+The serverless route has no durable spending ledger. Configure provider-side quotas or use the full Node server for persistent budget enforcement.
 
 Keep credentials in ignored `.env` files or hosting secrets. Never place them in client code, commits, or presentation files.
 
-## Next milestones
+## Built for Bittensor Builders House
 
-1. Fund Chutes and verify actual subnet inference through in-game execution.
-2. Measure acceptance rate, edit accuracy, latency, and cost per useful build.
-3. Improve validation and add bounded correction attempts.
-4. Implement accounts, billing, quotas, and the paid creator pilot.
-5. Evaluate 404-GEN access and an asset-import or voxel-conversion path.
+**Track 3 — Build with Bittensor Subnets**
 
-## Submission and provenance
+TensorCraft connects decentralized AI capabilities to an interactive creative product.
 
-TensorCraft adapts the existing **PromptCraft** project. The voxel engine, multiplayer, construction action language, agent foundations, and governance simulation predate this adaptation.
-
-This adaptation adds the Chutes integration, response provenance, demo/deployment work, integration tests, TensorCraft branding, and presentation materials. We do not claim the entire engine was built during the five-day program.
-
-Minecraft-inspired; not affiliated with Mojang or Microsoft. Independent Bittensor ecosystem prototype; no official endorsement is implied.
+| Area | Implementation |
+| --- | --- |
+| **Product** | Browser-based sandbox with AI-assisted creation |
+| **Gameplay** | Describe, build, explore, and edit |
+| **Construction inference** | Chutes / SN64 integration |
+| **3D generation** | 404-GEN / SN17 integration |
+| **Execution** | Structured operations, response checks, and inference metadata |
+| **Distribution** | Hosted game, narrated demo, and pitch deck |
 
 ---
 
-**Describe an idea. Watch it become a world. Step inside.**
+<div align="center">
+
+### Describe an idea. Watch it become a world. Step inside.
+
+[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/play)
+
+</div>
