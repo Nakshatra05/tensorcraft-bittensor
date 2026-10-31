@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
+export const passwordRequired = () => process.env.HOSTED_REQUIRE_PASSWORD === '1';
 export const authorized = req => {
+  if (!passwordRequired()) return true;
   const digest = s => crypto.createHash('sha256').update(String(s || '')).digest();
   return !!process.env.GAME_PASSWORD && crypto.timingSafeEqual(digest(req.headers['x-game-password']), digest(process.env.GAME_PASSWORD));
 };

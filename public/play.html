@@ -2740,18 +2740,20 @@ async function api(path, body) {
     return { ok: r.ok, status: r.status, j };
   } catch (err) { return { ok: false, status: 0, j: { error: 'Cannot reach the server (' + err.message + ')' } }; }
 }
+const hasAiAccess = () => ai.status?.requiresPassword === false || !!ai.password;
 async function refreshStatus() { try { const r = await fetch(API_BASE + '/api/status'); ai.status = await r.json(); } catch {} updateBudgetUI(); }
 function updateBudgetUI() {
   const s = ai.status, el = $('#budget');
   const providerLabel = s?.mock ? 'Demo builds · no network inference' : s?.provider === 'chutes' ? 'Chutes / Bittensor SN64 · configured' : s ? 'AI Builder · centralized inference' : 'Offline · local voxel world';
   $('#inference-status').textContent = providerLabel;
   if (s?.demo && !ai.password) ai.password = 'demo';
-  if (!ai.password) { el.textContent = '🔒 AI locked — Esc → password'; el.style.color = '#ffd27a'; }
+  if (!hasAiAccess()) { el.textContent = '🔒 AI locked — Esc → password'; el.style.color = '#ffd27a'; }
   else if (s?.demo) { el.textContent = 'Demo builder · G: tower / bridge / cabin / garden'; el.style.color = '#a3f9c5'; }
   else if (s?.metered) { el.textContent = `${s.provider === 'anthropic' ? 'AI Builder' : 'Chutes / SN64'} · live AI · G to build`; el.style.color = '#a3f9c5'; }
   else if (s) { const out = s.spentUsd >= s.budgetUsd - 0.01; el.textContent = `✨ AI $${(+s.spentUsd).toFixed(2)} / $${s.budgetUsd}${s.mock ? ' (mock)' : ''} · agents ${agentsOn ? 'on' : 'off'} (K)`; el.style.color = out ? '#ff8a8a' : '#c8ffd0'; }
   $('#agentsState').textContent = `AI minds (Ada…) ${agentsOn ? 'answer when tagged' : 'are switched off'}`;
-  if (!ai.changingPw) { $('#pwfld').hidden = !!ai.password; $('#pwok').hidden = !ai.password; } // the password is asked once, then remembered
+  if (s?.requiresPassword === false) { $('#pwfld').hidden = true; $('#pwok').hidden = true; }
+  else if (!ai.changingPw) { $('#pwfld').hidden = !!ai.password; $('#pwok').hidden = !ai.password; } // the password is asked once, then remembered
 }
 const thinking = new Map();
 function setThinking(id, label) { if (label) thinking.set(id, { label, t: nowS() }); else thinking.delete(id); renderThinking(); }
@@ -2854,7 +2856,7 @@ function regionContext(R) {
   ].join('\n');
 }
 async function askAI(prompt, { self = null, quiet = false, agent = null, region = null } = {}) {
-  if (!ai.password) { sysMsg('🔒 The AI is locked. Press Esc and enter the AI password.', 'err'); return null; }
+  if (!hasAiAccess()) { sysMsg('🔒 The AI is locked. Press Esc and enter the AI password.', 'err'); return null; }
   if (!agent && ai.creatorBusy >= 3) { sysMsg('The Creator is juggling too many requests — wait a moment.', 'err'); return null; }
   const id = Math.random().toString(36).slice(2);
   const label = agent ? `${agent.name} is thinking` : region ? `Generating region ${region.scan.name}` : `Creator: "${prompt.slice(0, 40)}${prompt.length > 40 ? '…' : ''}"`;
@@ -2897,7 +2899,7 @@ function queueThought(e, msg, byPlayer) { // something worth an AI turn happened
   e.inbox.push(msg);
 }
 function tickAgents(t) {
-  if (!agentsOn || !ai.password || ai.agentBusy || t < (ai.pauseAgentsUntil || 0)) return;
+  if (!agentsOn || !hasAiAccess() || ai.agentBusy || t < (ai.pauseAgentsUntil || 0)) return;
   if (ai.status && ai.status.spentUsd >= ai.status.budgetUsd - 0.01) return;
   // autonomous minds (/minds on): every ~20 s one agent near a player takes its own initiative
   if (isHost() && globals._minds && t >= (ai.nextAuto || 0)) {
@@ -3458,7 +3460,7 @@ function openPrompt(mode, initial = '') {
   inp.value = initial; histI = -1; updatePromptMode();
   if (/^@creator/i.test(initial) && !localStorage.getItem('pc.introCreator')) { // first time: the Creator introduces itself (scripted, free)
     localStorage.setItem('pc.introCreator', '1');
-    chatLine(`✨ <b>Creator:</b> Hi! I'm the world's AI. Describe anything (a block, a tool, a creature, a whole building, the weather) and I'll make it right here in about a minute.${creative() ? '' : ' In survival everything I invent comes with a crafting recipe.'} Pick an example below with ↑↓ and Tab, or write your own.${ai.password ? '' : ' First unlock me: Esc, then the AI password from whoever runs the game.'}`, 'ai');
+    chatLine(`✨ <b>Creator:</b> Hi! I'm the world's AI. Describe anything (a block, a tool, a creature, a whole building, the weather) and I'll make it right here in about a minute.${creative() ? '' : ' In survival everything I invent comes with a crafting recipe.'} Pick an example below with ↑↓ and Tab, or write your own.${hasAiAccess() ? '' : ' First unlock me: Esc, then the AI password from whoever runs the game.'}`, 'ai');
   } document.exitPointerLock(); setTimeout(() => { inp.focus(); updateSuggest(); }, 0);
   const box = $('#chat'); box.classList.add('open'); box.scrollTop = box.scrollHeight;
 }
@@ -4225,7 +4227,7 @@ const HOWTO = () => [
     <p>At night zombies, skeletons and creepers come out: build a shelter or fight. Just want to build? Options → <b>Game Mode: Creative</b> lets you fly, gives you every block and you can't die.</p>`],
   ['Create anything with AI', `<p>Press <b>${kn('create')}</b> and describe what you want:</p><ul><li><i>@Creator a wizard tower here</i></li><li><i>@Creator a sword that shoots lightning</i></li><li><i>@Creator a friendly dragon that follows me</i></li><li><i>@Creator make it rain frogs</i></li></ul>
     <p>The Creator invents new blocks, items, creatures and rules, and builds them in front of you in about a minute. In survival, new things come with a crafting recipe (marked ✨ in the recipe book); in creative they go straight to your hotbar.</p>
-    <p>The AI needs the password from whoever runs the game: type it once on the title screen.</p>`],
+    <p>The public demo is open: press G to start building. Privately hosted worlds may ask for a password on the title screen.</p>`],
   ['Talk to AIs and players', `<ul><li><b>${kn('chat')}</b> or <b>Enter</b> opens chat; everyone sees it.</li>
     <li>Tag someone to talk to them: <i>@Ada</i> is an AI architect who lives in the world, names like <i>@Pixel</i> are people's AI agents, and <i>@name</i> pings a player.</li>
     <li>Suggestions pop up while you type: <b>↑↓</b> to pick, <b>Tab</b> to complete.</li>
@@ -5434,7 +5436,7 @@ else if (!SANDBOX) {
   if (!load()) newWorld();
   $('#netmsg').textContent = hostedSinglePlayer ? 'TensorCraft · single-player demo · saved in this browser' : 'TensorCraft · OFFLINE: your own world in this browser';
   if (hostedSinglePlayer) {
-    setTimeout(() => sysMsg(ai.status?.demo ? 'Welcome to TensorCraft. Press G for demo builds: tower, bridge, cabin or garden. Live Chutes inference needs funded credits.' : `Welcome to TensorCraft. Enter the host password in the menu to use ${ai.status?.provider === 'anthropic' ? 'AI Builder' : 'Chutes'} for live builds.`), 900);
+    setTimeout(() => sysMsg(ai.status?.demo ? 'Welcome to TensorCraft. Press G for demo builds: tower, bridge, cabin or garden. Live Chutes inference needs funded credits.' : ai.status?.requiresPassword === false ? 'Welcome to TensorCraft. AI builds are open — press G and describe your idea.' : `Welcome to TensorCraft. Enter the host password in the menu to use ${ai.status?.provider === 'anthropic' ? 'AI Builder' : 'Chutes'} for live builds.`), 900);
   } else {
     setTimeout(() => sysMsg("⚠ Couldn't reach the shared world, so this is your offline world (saved in this browser). It switches back by itself as soon as the server answers.", 'err'), 900);
     reloadWhenServerUp();

@@ -8,7 +8,7 @@ Describe a tower, walk inside it, and build a world with AI agents.
 
 WASD moves, Space jumps, mouse mines/places, G requests a build, Esc opens the menu. Try tower, bridge, cabin, or garden. `/gamemode creative` enables flying (F).
 
-The Vercel deployment runs a single-player browser world with password-protected Claude Sonnet 5.5 generation. A local smoke test successfully generated a tower plan. Deterministic demo blueprints remain available when HOSTED_LIVE_AI is disabled. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds require the Node/Docker server.
+The Vercel deployment runs a single-player browser world with publicly accessible AI generation for the judging demo. A local smoke test successfully generated a tower plan. Deterministic demo blueprints remain available when HOSTED_LIVE_AI is disabled. Multiplayer, MCP agents, the nation simulation, and persistent shared worlds require the Node/Docker server.
 
 ## Bittensor integration
 
@@ -59,3 +59,5 @@ Primary: **Track 3 — Build with Bittensor Subnets ($200 USDC)**. Also consider
 - Attribution: base engine predates this adaptation. No claim to having built all functionality during the five-day program.
 
 The three-minute demo replays actual centrally generated AI plans in the voxel engine using a controlled camera; it is not a recording of successful live Chutes inference.
+
+Hosted demo access is currently public. Set HOSTED_REQUIRE_PASSWORD=1 to restore the GAME_PASSWORD check on Vercel. Provider credentials remain server-side.
