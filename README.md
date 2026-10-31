@@ -6,7 +6,7 @@
 
 Built for **Bittensor Builders House**, targeting **Track 3 — Build with Bittensor Subnets**.
 
-[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/play) · [Landing page](https://tensorcraft-bittensor.vercel.app) · [Watch the 3-minute demo](https://tensorcraft-bittensor.vercel.app/demo/TensorCraft-3-Minute-Demo.mp4) · [Pitch deck with embedded demo](presentation/TensorCraft-Bittensor-Pitch.pptx)
+[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/play) · [Landing page](https://tensorcraft-bittensor.vercel.app) · [Pitch deck with embedded demo](presentation/TensorCraft-Bittensor-Pitch.pptx)
 
 ![TensorCraft Minecraft-inspired visual theme](public/img/minecraft-menu.png)
 
