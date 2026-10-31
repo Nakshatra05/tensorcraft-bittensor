@@ -116,7 +116,7 @@ The core loop is simple: **describe → build → explore → refine.**
 
 ## Play now
 
-Open [TensorCraft](https://tensorcraft-bittensor.vercel.app/play), press **G**, and describe what you want to build.
+Open [TensorCraft](https://tensorcraft-bittensor.vercel.app/), press **G**, and describe what you want to build.
 
 The hosted demo is publicly accessible without a password.
 
@@ -139,8 +139,6 @@ The hosted edition is single-player and saves its world in your browser. Multipl
 The video replays actual AI-generated construction plans in the voxel engine using a controlled camera. It demonstrates the building experience rather than live Chutes inference or generation latency.
 
 The same video is embedded on slide 3 of the [pitch deck](presentation/TensorCraft-Bittensor-Pitch.pptx).
-
-Install the [included pixel fonts](presentation/fonts) to preserve the deck’s Minecraft-inspired typography.
 
 ## Run locally
 
@@ -231,6 +229,6 @@ TensorCraft connects decentralized AI capabilities to an interactive creative pr
 
 ### Describe an idea. Watch it become a world. Step inside.
 
-[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/play)
+[Play TensorCraft](https://tensorcraft-bittensor.vercel.app/)
 
 </div>
