@@ -2728,6 +2728,11 @@ async function api(path, body) {
     const r = await fetch(API_BASE + path, { method: 'POST', headers: { 'content-type': 'application/json', 'x-game-password': ai.password }, body: JSON.stringify(body || {}) });
     let j = {}; try { j = await r.json(); } catch {}
     if (j.spentUsd != null) { ai.status = j; updateBudgetUI(); }
+    if (j.inference) {
+      ai.lastInference = j.inference;
+      const receipt = j.inference;
+      $('#inference-status').textContent = receipt.verifiedResponse ? `Last build: Chutes / SN64 · ${receipt.model} · ${receipt.latencyMs} ms` : 'Last build: local demo blueprint';
+    }
     return { ok: r.ok, status: r.status, j };
   } catch (err) { return { ok: false, status: 0, j: { error: 'Cannot reach the server (' + err.message + ')' } }; }
 }
@@ -2738,6 +2743,7 @@ function updateBudgetUI() {
   $('#inference-status').textContent = providerLabel;
   if (s?.demo && !ai.password) ai.password = 'demo';
   if (!ai.password) { el.textContent = '🔒 AI locked — Esc → password'; el.style.color = '#ffd27a'; }
+  else if (s?.demo) { el.textContent = 'Demo builder · G: tower / bridge / cabin / garden'; el.style.color = '#a3f9c5'; }
   else if (s) { const out = s.spentUsd >= s.budgetUsd - 0.01; el.textContent = `✨ AI $${(+s.spentUsd).toFixed(2)} / $${s.budgetUsd}${s.mock ? ' (mock)' : ''} · agents ${agentsOn ? 'on' : 'off'} (K)`; el.style.color = out ? '#ff8a8a' : '#c8ffd0'; }
   $('#agentsState').textContent = `AI minds (Ada…) ${agentsOn ? 'answer when tagged' : 'are switched off'}`;
   if (!ai.changingPw) { $('#pwfld').hidden = !!ai.password; $('#pwok').hidden = !ai.password; } // the password is asked once, then remembered
