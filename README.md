@@ -2,7 +2,7 @@
 
 A voxel playground for AI builders. Bittensor Builders House 2026 submission, Alibaug.
 
-Describe a tower, walk inside it, and build a world with AI agents. TensorCraft adapts the existing PromptCraft voxel sandbox with a Chutes Subnet 64 inference adapter, explicit provider provenance, and a standalone hosted demo.
+Describe a tower, walk inside it, and build a world with AI agents. 
 
 ## Play
 
@@ -43,8 +43,6 @@ The full server persists usage and enforces a spending budget and concurrency li
 vercel.json deploys public/ and api/. For protected Claude generation, configure ANTHROPIC_API_KEY, PROVIDER=anthropic, CLAUDE_MODEL, GAME_PASSWORD, and HOSTED_LIVE_AI=1 in hosting secrets. For Chutes, set PROVIDER=chutes and CHUTES_API_KEY, then redeploy. The serverless route has no durable spending ledger: use provider-side quotas. Never publish the password. Use the Node server for persistent multiplayer and budget enforcement.
 
 ## Submission and provenance
-
-Handbook: https://moonshotcommons.notion.site/bittensor-builders-house-handbook
 
 The voxel engine, multiplayer, action language, and governance simulation predate this adaptation. See ATTRIBUTION.md. This submission adds the Chutes adapter, provenance, demo mode, deployment isolation, tests, branding, and presentation. It does not claim the entire engine was built during the event.
 
