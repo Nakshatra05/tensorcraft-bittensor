@@ -1,0 +1,20 @@
+{
+  "name": "tensorcraft-bittensor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Single-page voxel sandbox where an AI builds structures and invents blocks, creatures and items on the fly.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "tunnel": "cloudflared tunnel --url http://localhost:8787",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "@google/genai": "^2.29.1",
+    "puppeteer-core": "^24.10.0",
+    "viem": "^2.57.7",
+    "ws": "^8.22.0"
+  }
+}

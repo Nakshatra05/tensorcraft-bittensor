@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "functions": { "api/ai.js": { "maxDuration": 120, "includeFiles": "prompt.md" } }
+}

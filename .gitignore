@@ -1,0 +1,13 @@
+node_modules/
+data/
+.env
+.vercel
+.env.*
+!.env.example
+.build/
+.codex-finalizer/
+output/
+scripts/rebrand.mjs
+public/img/edgecity-goa.jpg
+public/img/goa-beach.jpg
+public/img/aqua0.svg

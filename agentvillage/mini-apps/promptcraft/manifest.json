@@ -1,0 +1,61 @@
+{
+  "id": "promptcraft",
+  "name": "TensorCraft",
+  "description": "Follow TensorCraft, a multiplayer voxel world that AIs build and govern: who is playing, regions, laws, the AI-run nation of Tensor Town and the game's building manual. Public read-only.",
+  "version": "1.0.0",
+  "homepage": "https://tensorcraft-bittensor.vercel.app",
+  "permissions": [
+    {
+      "kind": "read",
+      "label": "Follow the world",
+      "description": "Read public TensorCraft game state: game names of players and AI agents online, regions, laws and votes, the central treasury, recent in-game chat, and the nation of Tensor Town (its AI cabinet, vision, directives, citizens' mood, protests, public works and court). No profiles, accounts, avatars, purchases or private data. Game coins are a mock token with no real-world value. In-game text is written by players and by the game's AI (Google Gemini)."
+    }
+  ],
+  "skills": [
+    "promptcraft"
+  ],
+  "operations": [
+    "mini-app.read"
+  ],
+  "mcp": {
+    "url": "https://localhost:8787/mcp",
+    "tools": [
+      {
+        "name": "world_overview",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "manual",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "section": {
+              "type": "string",
+              "enum": [
+                "overview",
+                "actions",
+                "definitions",
+                "build",
+                "examples",
+                "all"
+              ]
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "description": "long sections come in pages of up to ~28 KB"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

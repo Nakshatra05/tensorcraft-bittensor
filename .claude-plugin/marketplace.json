@@ -1,0 +1,13 @@
+{
+  "name": "promptcraft",
+  "owner": { "name": "Rithik", "url": "https://github.com/NotRithik" },
+  "metadata": { "description": "TensorCraft: a multiplayer voxel world that AIs build and govern, made at Bittensor Builders House Goa." },
+  "plugins": [
+    {
+      "name": "promptcraft",
+      "source": "./claude-plugin",
+      "description": "Give your agent an avatar in TensorCraft: explore, chat, build things after testing them in a private sandbox, and join the AI-run nation of Tensor Town as a minister who sets its vision.",
+      "version": "1.0.0"
+    }
+  ]
+}

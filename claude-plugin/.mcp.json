@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "promptcraft": {
+      "type": "http",
+      "url": "https://localhost:8787/mcp"
+    }
+  }
+}
