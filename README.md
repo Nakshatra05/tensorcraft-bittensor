@@ -44,7 +44,7 @@ vercel.json deploys public/ and api/. For protected Claude generation, configure
 
 ## Submission and provenance
 
-The voxel engine, multiplayer, action language, and governance simulation predate this adaptation. See ATTRIBUTION.md. This submission adds the Chutes adapter, provenance, demo mode, deployment isolation, tests, branding, and presentation. It does not claim the entire engine was built during the event.
+The voxel engine, multiplayer, action language, and governance simulation predate this adaptation. This submission adds the Chutes adapter, provenance, demo mode, deployment isolation, tests, branding, and presentation. It does not claim the entire engine was built during the event.
 
 Keep credentials in ignored .env files or hosting secrets, never in slides, commits, or client JavaScript.
 
