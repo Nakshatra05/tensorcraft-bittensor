@@ -888,7 +888,8 @@ const sunLight = new THREE.DirectionalLight(0xffffff, 1.3); sunLight.position.se
 scene.add(hemi, sunLight);
 // day / night: one 20-minute clock every client derives from the time (globals._clock shifts it: /time); 0 = sunrise, .25 noon, .5 sunset, .75 midnight
 const DAY_LEN = 1200, NIGHT_C = new THREE.Color('#0b1030'), DUSK_C = new THREE.Color('#ff8a5a'), _sunDir = new THREE.Vector3();
-const dayPhase = () => ((((Date.now() / 1000 + (+globals._clock || 0)) % DAY_LEN) + DAY_LEN) % DAY_LEN) / DAY_LEN;
+let fixedDayPhase = 0.25; // Bright noon by default; explicit time commands can change it.
+const dayPhase = () => !SANDBOX && fixedDayPhase !== null ? fixedDayPhase : ((((Date.now() / 1000 + (+globals._clock || 0)) % DAY_LEN) + DAY_LEN) % DAY_LEN) / DAY_LEN;
 const daylight = () => clamp(0.5 + (Math.sin(dayPhase() * Math.PI * 2) + 0.2) * 1.5, 0.28, 1);
 const isNight = () => daylight() < 0.5 || SKY.bright < 0.6;
 const sun = new THREE.Mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshBasicMaterial({ color: 0xfff3b0, fog: false }));
@@ -906,6 +907,8 @@ void main(){ vec4 c=texture2D(map,vUv); if(c.a<alphaCut) discard; float s = vSh>
 const matOpaque = new THREE.ShaderMaterial({ uniforms: { ...chunkUniforms, alphaCut: { value: 0.5 } }, vertexShader: VS, fragmentShader: FS });
 const matTrans = new THREE.ShaderMaterial({ uniforms: { ...chunkUniforms, alphaCut: { value: 0.02 } }, vertexShader: VS, fragmentShader: FS, transparent: true, depthWrite: false, side: THREE.DoubleSide });
 function applySky(o = {}) {
+  if (!SANDBOX && ['day','night','sunset'].includes(o.preset)) fixedDayPhase = {day:0.25,night:0.75,sunset:0.49}[o.preset];
+  if (!SANDBOX && Number.isFinite(o.phase)) fixedDayPhase = clamp(o.phase, 0, 1);
   if (o.preset === 'night') Object.assign(o, { color: '#0b1030', fog: '#0b1030', bright: 0.32 });
   if (o.preset === 'day') Object.assign(o, { color: '#87b8ff', fog: '#a9cbff', bright: 1 });
   if (o.preset === 'sunset') Object.assign(o, { color: '#ff9a6a', fog: '#f7a07a', bright: 0.75 });
@@ -3603,10 +3606,11 @@ function command(v) {
     case 'tutorial': case 'howto': openHowTo(0); break;
     case 'hints': { const off = a[0] !== 'on'; hintsDone.clear(); if (off) for (const [k] of HINTS) hintsDone.add(k); localStorage.setItem('pc.hints', JSON.stringify([...hintsDone])); sysMsg(off ? 'Tutorial hints hidden (/hints on brings them back).' : 'Tutorial hints on.'); break; }
     case 'undo': if (isHost()) undoLast(); else netSend({ t: 'cmd', cmd: 'undo' }); break;
-    case 'time': { // day / noon / sunset / night / midnight move the shared clock; other words are sky presets (storm)
-      const at = { day: 0.04, morning: 0.04, noon: 0.25, sunset: 0.49, night: 0.6, midnight: 0.75 }[a[0] || 'day'];
+    case 'time': { // Fixed time by default; /time cycle resumes the shared clock.
+      if (a[0] === 'cycle') { applySky({preset:'day'}); fixedDayPhase = null; sysMsg('Day/night cycle enabled. /time day restores bright daytime.'); break; }
+      const at = { day: 0.25, morning: 0.04, noon: 0.25, sunset: 0.49, night: 0.6, midnight: 0.75 }[a[0] || 'day'];
       if (at == null) { runActions([{ do: 'sky', preset: a[0] }], { self: player, vars: {} }); break; }
-      runActions([{ do: 'sky', preset: 'day' }, { do: 'set', on: 'global', var: '_clock', value: Math.round(((at - ((Date.now() / 1000) % DAY_LEN) / DAY_LEN + 1) % 1) * DAY_LEN) }], { self: player, vars: {} });
+      runActions([{ do: 'sky', preset: 'day', phase: at }, { do: 'set', on: 'global', var: '_clock', value: Math.round(((at - ((Date.now() / 1000) % DAY_LEN) / DAY_LEN + 1) % 1) * DAY_LEN) }], { self: player, vars: {} });
       break;
     }
     case 'killall': if (isHost()) clearMobs(); else netSend({ t: 'cmd', cmd: 'killall' }); break;
@@ -5442,6 +5446,7 @@ if (['tower','bridge','cabin','garden'].includes(landingBuild)) setTimeout(() =>
   $('#menu').style.display = 'none'; $('#menu').classList.remove('title'); openPrompt('', '@Creator ' + landingBuild);
 }, 1200);
 if (ai.password) api('/api/check').then((r) => { if (r.status === 401) { ai.password = ''; localStorage.removeItem('pc.pw'); } updateBudgetUI(); }); // remembered password still valid?
+if (!SANDBOX) applySky({ preset: 'day' });
 camera.position.set(player.pos.x, player.pos.y + 1.62, player.pos.z);
 addEventListener('beforeunload', saveNow);
 document.addEventListener('visibilitychange', () => {
