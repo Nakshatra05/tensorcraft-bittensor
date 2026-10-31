@@ -8,7 +8,7 @@
 
 A Minecraft-inspired sandbox powered by Bittensor. Describe your idea, generate structures and 3D assets, and step inside your creation.
 
-[Play Now](https://tensorcraft-bittensor.vercel.app/play) · [Watch Demo](https://tensorcraft-bittensor.vercel.app/demo/TensorCraft-3-Minute-Demo.mp4) · [Pitch Deck](presentation/TensorCraft-Bittensor-Pitch.pptx)
+[Play Now](https://tensorcraft-bittensor.vercel.app/) ·  [Pitch Deck](presentation/TensorCraft-Bittensor-Pitch.pptx)
 
 Built for **Bittensor Builders House** · **Track 3 — Build with Bittensor Subnets**
 
