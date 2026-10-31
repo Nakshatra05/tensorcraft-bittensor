@@ -246,6 +246,7 @@ button.bookbtn:hover{background:#6ab85a}
       <div id="pwfld"><div class="pwrow"><input id="pw" class="txt" type="password" placeholder="AI password (ask the host)"><button id="pwbtn">Unlock AI</button></div><span id="pwmsg" class="hint"></span></div>
       <div id="pwok" class="okline" hidden>✓ AI unlocked on this device <button id="pwchange" class="link">change</button></div>
       <button id="play">Play</button>
+      <button id="quickbuild">Try a build: tower / bridge / cabin / garden</button>
       <button data-tab="howto">How to Play</button>
       <div class="pair"><button data-tab="agents">AI Agents</button><button data-tab="world">Who's Online</button></div>
       <button data-lib="1">Library: games, items, interfaces</button>
@@ -3627,6 +3628,11 @@ $('#pw').addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key ===
 $('#pwchange').addEventListener('click', () => { ai.changingPw = true; $('#pwok').hidden = true; $('#pwfld').hidden = false; $('#pw').focus(); });
 $('#play').addEventListener('click', () => {
   lockPointer(); if (!$('#menu').classList.contains('title')) $('#menu').style.display = 'none'; }); // if the browser refuses the lock (right after Esc), "Click to resume" shows
+$('#quickbuild').addEventListener('click', () => {
+  $('#menu').style.display = 'none';
+  $('#menu').classList.remove('title');
+  openPrompt('', '@Creator tower');
+});
 function setRenderDistance(v) {
   RD = clamp(Math.round(v), 2, 16); localStorage.setItem('pc.rd', RD); applyRenderDistance();
   $('#rd').value = RD; $('#rdv').textContent = `${RD} chunks (${RD * CS} blocks)`;
