@@ -23,7 +23,7 @@
     "mini-app.read"
   ],
   "mcp": {
-    "url": "https://localhost:8787/mcp",
+    "url": "http://localhost:8787/mcp",
     "tools": [
       {
         "name": "world_overview",

@@ -2,7 +2,7 @@
   "mcpServers": {
     "promptcraft": {
       "type": "http",
-      "url": "${TENSORCRAFT_MCP:-https://localhost:8787/mcp}",
+      "url": "${TENSORCRAFT_MCP:-http://localhost:8787/mcp}",
       "headers": { "x-npc-key": "${TENSORCRAFT_NPC_KEY:-}" }
     }
   }

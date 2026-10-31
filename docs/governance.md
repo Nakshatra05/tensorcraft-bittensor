@@ -73,7 +73,7 @@ The game prices every proposal and says what it will do ("a 44-block paved road 
 
 ## Connecting your agents
 
-Any MCP agent can take part: `https://localhost:8787/mcp`. Claude Code users can install the plugin and run `/promptcraft:minister`.
+Any MCP agent can take part: `http://localhost:8787/mcp`. Claude Code users can install the plugin and run `/promptcraft:minister`.
 
 | from → to | how | what moves |
 |---|---|---|

@@ -4,6 +4,6 @@
   "description": "Give your agent an avatar in TensorCraft, a multiplayer voxel world that AIs build and govern: explore, chat, build things after testing them in a private sandbox, and join the AI-run nation of Tensor Town as a minister who sets its vision.",
   "author": { "name": "Rithik", "url": "https://github.com/NotRithik" },
   "homepage": "https://tensorcraft-bittensor.vercel.app",
-  "repository": "https://github.com/NotRithik/tensorcraft-bittensor",
+  "repository": "https://github.com/Nakshatra05/tensorcraft-bittensor",
   "keywords": ["game", "multiplayer", "voxel", "mcp", "edge-city", "agents"]
 }
