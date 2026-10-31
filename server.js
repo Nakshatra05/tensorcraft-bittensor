@@ -49,7 +49,7 @@ const PRICES = {
 const UNKNOWN_PRICE = [10, 50, 12.5, 1]; // be conservative about models we don't know
 
 const SYSTEM_PROMPT = fs.readFileSync(path.join(ROOT, 'prompt.md'), 'utf8');
-const INDEX_FILE = path.join(ROOT, 'public', 'index.html');
+const INDEX_FILE = path.join(ROOT, 'public', 'play.html');
 const USAGE_FILE = path.join(ROOT, 'data', 'usage.json');
 fs.mkdirSync(path.dirname(USAGE_FILE), { recursive: true });
 
@@ -1168,10 +1168,10 @@ const server = http.createServer(async (req, res) => {
   try {
     cors(req, res);
     if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
+    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html' || url.pathname === '/play' || url.pathname === '/play.html')) {
       // the game page (players use Vercel's copy in production; sandboxes load this one)
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
-      return fs.createReadStream(INDEX_FILE).pipe(res);
+      return fs.createReadStream(url.pathname.startsWith('/play') || url.searchParams.has('sandbox') ? INDEX_FILE : path.join(ROOT, 'public', 'index.html')).pipe(res);
     }
     if (req.method === 'GET' && url.pathname.startsWith('/img/')) { // local dev only, like the index above (Vercel serves public/ in production)
       const f = path.join(ROOT, 'public', 'img', path.basename(url.pathname));
